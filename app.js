@@ -20,7 +20,6 @@ app.listen(3000, () => {
 });
 
 app.get("/", (req, res) => {
-	//res.sendFile(path.resolve(__dirname,'index.html'))
 	res.render("index");
 });
 
@@ -32,25 +31,61 @@ app.get("/scores", async (req, res) => {
 });
 
 app.get("/dashboard", async (req, res) => {
-	const scores = await await Scores.find({});
+	const scores = await Scores.find({});
+
 	const sort_by = (field, reverse, primer) => {
-		const key = primer
-			? function (x) {
-					return primer(x[field]);
-			  }
-			: function (x) {
-					return x[field];
-			  };
+		const key = primer ? (x) => primer(x[field]) : (x) => x[field];
 
 		reverse = !reverse ? 1 : -1;
 
-		return function (a, b) {
-			return (a = key(a)), (b = key(b)), reverse * ((a > b) - (b > a));
+		return (a, b) => {
+			const A = key(a);
+			const B = key(b);
+			return reverse * ((A > B) - (B > A));
 		};
 	};
+
+	const total_pretest = scores.reduce(
+		(acc, score) => acc + BigInt(score.pretest),
+		0n
+	);
+	const total_posttest = scores.reduce(
+		(acc, score) => acc + BigInt(score.posttest),
+		0n
+	);
+
+	const average_pretest = total_pretest / BigInt(scores.length);
+	const average_posttest = total_posttest / BigInt(scores.length);
+
+	const variance_pretest =
+		scores.reduce(
+			(acc, score) => acc + (BigInt(score.pretest) - average_pretest) ** 2n,
+			0n
+		) / BigInt(scores.length);
+	const variance_posttest =
+		scores.reduce(
+			(acc, score) => acc + (BigInt(score.posttest) - average_posttest) ** 2n,
+			0n
+		) / BigInt(scores.length);
+
+	const stddev_pretest = Math.sqrt(Number(variance_pretest));
+	const stddev_posttest = Math.sqrt(Number(variance_posttest));
+
 	scores.sort(sort_by("pretest", true, parseInt));
+	const mid = Math.round(scores.length / 2);
+
 	res.render("dashboard", {
 		scores,
+		total_pretest,
+		total_posttest,
+		average_pretest,
+		average_posttest,
+		variance_pretest,
+		variance_posttest,
+		stddev_pretest,
+		stddev_posttest,
+		median_pretest: scores[mid].pretest,
+		median_posttest: scores[mid].posttest,
 	});
 });
 

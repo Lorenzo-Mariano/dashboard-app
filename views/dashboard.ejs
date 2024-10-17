@@ -34,6 +34,16 @@
   Pre-Test: <%= scores[mid].pretest %><br>
   Post-Test: <%= scores[mid].posttest %><br>
 
+  <h2>Variance</h2>
+  Pre-Test Variance: <%= variance_pretest %><br>
+  Post-Test Variance: <%= variance_posttest %><br>
+
+  <h2>Standard Deviation</h2>
+  Pre-Test Standard Deviation: <%= stddev_pretest.toFixed(2) %><br>
+  Post-Test Standard Deviation: <%= stddev_posttest.toFixed(2) %><br>
+
+
+
   <h2>Graph of Total and Average Scores</h2>
   <script type="text/javascript">
     window.onload = function() {
