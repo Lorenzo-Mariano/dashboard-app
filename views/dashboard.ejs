@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/dashboard_header'); -%>
+
+<body>
+  <header>
+    <h1>Dashboard Page</h1>
+  </header>
+  <%- include('layouts/navbar'); -%>
+  <hr>
+  <!-- Data -->
+  <h2>Summary of Total Scores of Students</h2>
+  <% 
+    total_pretest = 0n
+    total_posttest = 0n
+    for (var i = 0; i < scores.length; i++) { 
+        total_pretest = total_pretest + BigInt(scores[i].pretest)
+        total_posttest = total_posttest + BigInt(scores[i].posttest)
+    }
+    average_pretest = total_pretest/BigInt(scores.length) 
+    average_posttest = total_posttest/BigInt(scores.length)
+
+    mid = Math.round(scores.length/2)
+    %>
+  <h2>Total Scores</h2>
+  Pre-Test: <%= total_pretest %><br>
+  Post-Test: <%= total_posttest %><br>
+
+  <h2>Average Scores</h2>
+  Pre-Test: <%= average_pretest %><br>
+  Post-Test: <%= average_posttest %><br>
+
+  <h2>Median Scores</h2>
+  Pre-Test: <%= scores[mid].pretest %><br>
+  Post-Test: <%= scores[mid].posttest %><br>
+
+  <h2>Graph of Total and Average Scores</h2>
+  <script type="text/javascript">
+    window.onload = function() {
+      var chart1 = new CanvasJS.Chart("chartContainer1", {
+        title: {
+          text: "Total Scores of Pre-test and Post-test"
+        },
+        axisX: {
+          labelPlacement: "outside",
+          tickPlacement: "outside",
+          tickLength: 15,
+          interval: 10,
+        },
+        axisY: {
+          title: "Total Scores",
+        },
+        data: [{
+          type: "column",
+          dataPoints: [{
+              label: "Pre-test",
+              x: 10,
+              y: <%= total_pretest %>
+            },
+            {
+              label: "Post-test",
+              x: 20,
+              y: <%= total_posttest %>
+            }
+          ]
+        }]
+      });
+      var chart2 = new CanvasJS.Chart("chartContainer2", {
+        title: {
+          text: "Average Scores of Pre-test and Post-test"
+        },
+        axisX: {
+          labelPlacement: "outside",
+          tickPlacement: "outside",
+          tickLength: 15,
+          interval: 10,
+        },
+        axisY: {
+          title: "Average Scores",
+        },
+        data: [{
+          type: "column",
+          dataPoints: [{
+              label: "Pre-test",
+              x: 10,
+              y: <%= average_pretest %>
+            },
+            {
+              label: "Post-test",
+              x: 20,
+              y: <%= average_posttest %>
+            },
+          ]
+        }]
+      });
+      chart1.render();
+      chart2.render();
+    }
+  </script>
+  <div id="chartContainer1" style="width: 49%; height: 275px;display: inline-block;"></div>
+  <div id="chartContainer2" style="width: 49%; height: 275px;display: inline-block;"></div>
+  <!-- End of Data -->
+  <hr>
+  <%- include('layouts/footer'); -%>
+  <%- include('layouts/scripts'); -%>
+</body>
+
+</html>

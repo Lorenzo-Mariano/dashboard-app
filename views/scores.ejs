@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+<body>
+    <header>
+        <h1>Scores Page</h1>
+    </header>
+    <%- include('layouts/navbar'); -%>
+    <hr>
+    <!-- Data -->
+    Students Scores
+    <% for (var i = 0; i < scores.length; i++) { %>
+        School Code: <%= scores[i].school_code %><br>  
+        School Setting: <%= scores[i].school_setting %><br>
+        School Type: <%= scores[i].school_type %><br>
+        Teaching Method: <%= scores[i].teaching_method %><br>
+        Student ID: <%= scores[i].student_id %><br>
+        Gender: <%= scores[i].gender %><br>
+        Pre-test: <%= scores[i].pretest %><br>
+        Post-test: <%= scores[i].posttest %>
+        <br><hr><br>
+    <% } %>        
+    <!-- End of Data -->
+    <%- include('layouts/footer'); -%>
+    <%- include('layouts/scripts'); -%>
+    <hr>
+</body>
+</html>
