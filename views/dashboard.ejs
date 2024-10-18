@@ -8,6 +8,7 @@
   </header>
   <%- include('layouts/navbar'); -%>
   <hr>
+
   <!-- Data -->
   <h2>Summary of Total Scores of Students</h2>
   <% 
@@ -17,33 +18,70 @@
         total_pretest = total_pretest + BigInt(scores[i].pretest)
         total_posttest = total_posttest + BigInt(scores[i].posttest)
     }
-    average_pretest = total_pretest/BigInt(scores.length) 
-    average_posttest = total_posttest/BigInt(scores.length)
+    average_pretest = total_pretest / BigInt(scores.length)
+    average_posttest = total_posttest / BigInt(scores.length)
 
-    mid = Math.round(scores.length/2)
-    %>
+    mid = Math.round(scores.length / 2)
+  %>
+
+  <!-- Display Total Scores -->
   <h2>Total Scores</h2>
   Pre-Test: <%= total_pretest %><br>
   Post-Test: <%= total_posttest %><br>
 
+  <!-- Display Average Scores -->
   <h2>Average Scores</h2>
   Pre-Test: <%= average_pretest %><br>
   Post-Test: <%= average_posttest %><br>
 
+  <!-- Display Median Scores -->
   <h2>Median Scores</h2>
   Pre-Test: <%= scores[mid].pretest %><br>
   Post-Test: <%= scores[mid].posttest %><br>
 
+  <!-- Display Variance -->
   <h2>Variance</h2>
   Pre-Test Variance: <%= variance_pretest %><br>
   Post-Test Variance: <%= variance_posttest %><br>
 
+  <!-- Display Standard Deviation -->
   <h2>Standard Deviation</h2>
   Pre-Test Standard Deviation: <%= stddev_pretest.toFixed(2) %><br>
   Post-Test Standard Deviation: <%= stddev_posttest.toFixed(2) %><br>
 
+  <h2>Correlation Between Pre-test and Post-test Scores</h2>
+  <p>
+    The correlation coefficient measures the strength and direction of the linear relationship between pre-test and post-test scores.<br>
+    <strong>Correlation (Pre-test vs Post-test):</strong> <%= correlation.toFixed(4) %>
+    <br>
+    <strong>Interpretation:</strong>
+    <% if (Math.abs(correlation) > 0.8) { %>
+    The correlation is strong, indicating a strong relationship between pre-test and post-test scores.
+    <% } else if (Math.abs(correlation) > 0.5) { %>
+    The correlation is moderate, indicating a noticeable relationship between pre-test and post-test scores.
+    <% } else if (Math.abs(correlation) > 0.3) { %>
+    The correlation is weak, suggesting a weak relationship between pre-test and post-test scores.
+    <% } else { %>
+    The correlation is very weak or negligible, suggesting little to no relationship between pre-test and post-test scores.
+    <% } %>
+  </p>
+
+  <h2>Paired T-Test Comparing Pre-test and Post-test Scores</h2>
+  <p>
+    The paired t-test compares the means of the pre-test and post-test scores to see if there is a statistically significant difference.<br>
+    <strong>Paired T-Test Value:</strong> <%= tValue.toFixed(4) %>
+    <br>
+    <strong>Interpretation:</strong>
+    <% if (Math.abs(tValue) > 2.262) { %>
+    <!-- Assuming a significance level of 0.05 for n-1 degrees of freedom -->
+    The t-test result shows a significant difference between the pre-test and post-test means, suggesting that the intervention had a measurable effect.
+    <% } else { %>
+    The t-test result does not show a significant difference between the pre-test and post-test means, suggesting that the intervention had little or no effect.
+    <% } %>
+  </p>
 
 
+  <!-- Graph of Total and Average Scores -->
   <h2>Graph of Total and Average Scores</h2>
   <script type="text/javascript">
     window.onload = function() {
@@ -107,8 +145,11 @@
       chart2.render();
     }
   </script>
-  <div id="chartContainer1" style="width: 49%; height: 275px;display: inline-block;"></div>
-  <div id="chartContainer2" style="width: 49%; height: 275px;display: inline-block;"></div>
+
+  <!-- Graph Containers -->
+  <div id="chartContainer1" style="width: 49%; height: 275px; display: inline-block;"></div>
+  <div id="chartContainer2" style="width: 49%; height: 275px; display: inline-block;"></div>
+
   <!-- End of Data -->
   <hr>
   <%- include('layouts/footer'); -%>
